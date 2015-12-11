@@ -7,7 +7,7 @@ Those script are mostly inspirated by the [alpine wiki - Replacing non-Alpine Li
 - install `debian 7.5 (Wheezy) (Oldstable) (64bits)` image provided by kimsufi
 - copy, configure and run `alpine-install-from-debian.sh` script on your host using [scp](http://linux.die.net/man/1/scp)
 
-Don't forget to set your ssh public in the script configuration, or you will not be able to log on your server after installation
+Don't forget to setup your ssh public key in the script configuration, or you will not be able to log on your server after installation
 
 - reboot -normaly the script reboot on success, depending on provided configuration
 - copy, configure and run `alpine-post-install.sh` script on your host using [scp](http://linux.die.net/man/1/scp)
