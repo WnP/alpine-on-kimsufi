@@ -1,3 +1,9 @@
+# Warning
+
+*Practice on a computer with physical access first. If something goes wrong, the remote box will very likely be left in an unusable state. In that case, you get to turn in a support request to regen the server back to "factory fresh" mode.*
+
+![keep-calm-and-destroy-all-of-them](http://image.spreadshirtmedia.com/image-server/v1/compositions/101914373/views/1,width=280,height=280,appearanceId=1.png)
+
 # Install alpine linux on kimsufi server
 
 Those script are mostly inspirated by the [alpine wiki - Replacing non-Alpine Linux with Alpine remotely](http://wiki.alpinelinux.org/wiki/Replacing_non-Alpine_Linux_with_Alpine_remotely) and should work on many other restricted hosting service.
