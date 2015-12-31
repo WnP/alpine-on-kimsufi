@@ -11,6 +11,7 @@ set -e
 readonly ALPINESOURCE=http://wiki.alpinelinux.org/cgi-bin/dl.cgi/v3.2/releases/x86_64/alpine-3.2.3-x86_64.iso
 readonly DOWLOADSOURCE=true # if you don't want to download from an external server set false and put iso file in $PWD
 
+readonly GPT=false
 readonly MBR=sda
 readonly ROOTVOLUME=sda1
 readonly OVERLAY=$PWD/overlay
@@ -109,19 +110,28 @@ get_alpine_iso() {
 }
 
 install_bootloader() {
-	dd if=/usr/lib/syslinux/mbr.bin of=/dev/$MBR
+	if $GPT
+	then
+		dd bs=440 conv=notrunc count=1 if=/usr/lib/syslinux/gptmbr.bin of=/dev/$MBR
+		apt-get install gdisk -y
+		sgdisk /dev/sda --attributes=2:set:2
+		# just for debug
+		sgdisk /dev/sda --attributes=2:show
+	else
+		dd if=/usr/lib/syslinux/mbr.bin of=/dev/$MBR
+	fi
 
 	## Make sure that /boot dir has a symlink pointing to itself. This is to handle the case when /boot is on separate partition.
 	ln -sf / /boot/boot
 
 	## Create /boot/extlinux.conf
 	cat > /boot/extlinux.conf <<- EOF
-	timeout 20
-	prompt 1
-	default grsec
-	label grsec
-		kernel /boot/vmlinuz-grsec
-		append initrd=/boot/initramfs-grsec alpine_dev=$ROOTVOLUME:ext4 modules=loop,squashfs,sd-mod,usb-storage,sr-mod quiet
+	TIMEOUT 20
+	PROMPT 1
+	DEFAULT grsec
+	LABEL grsec
+		KERNEL /boot/vmlinuz-grsec
+		APPEND initrd=/boot/initramfs-grsec alpine_dev=UUID=$(blkid |grep $ROOTVOLUME|cut -d '"' -f 2):ext4 modules=loop,squashfs,sd-mod,usb-storage,sr-mod quiet
 	EOF
 
 	## Finally make the /boot partition bootable by extlinux.
